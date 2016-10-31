@@ -33,7 +33,7 @@
   "main": "./lib",
   "dependencies": {
     "async": "^1.5.0",
-    "express-unless": "^0.3.0",
+    "lux-unless": "^0.1.0",
     "jsonwebtoken": "~6.2.0",
     "lodash.set": "^4.0.0"
   },
