@@ -1,0 +1,50 @@
+{
+  "name": "lux-jwt",
+  "version": "0.0.1",
+  "description": "JWT authentication middleware.",
+  "keywords": [
+    "auth",
+    "authn",
+    "authentication",
+    "authz",
+    "authorization",
+    "http",
+    "jwt",
+    "token",
+    "oauth",
+    "lux"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nickschot/lux-jwt.git"
+  },
+  "bugs": {
+    "url": "http://github.com/nickschot/lux-jwt/issues"
+  },
+  "author": {
+    "name": "Nick Schot"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "main": "./lib",
+  "dependencies": {
+    "async": "^1.5.0",
+    "express-unless": "^0.3.0",
+    "jsonwebtoken": "~6.2.0",
+    "lodash.set": "^4.0.0"
+  },
+  "devDependencies": {
+    "conventional-changelog": "~1.1.0",
+    "mocha": "1.x.x"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --reporter spec"
+  }
+}
