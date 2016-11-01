@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# misc
+.git
+*.DS_Store
+*.lcov
+.nyc_output/
+coverage/
+examples/
+
+# logs
+log/
+npm-debug.log
+
+# tests
+test/
