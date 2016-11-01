@@ -1,5 +1,7 @@
 # lux-jwt
 
+[![Build Status](https://travis-ci.org/nickschot/lux-unless.svg?branch=master)](https://travis-ci.org/nickschot/lux-unless)
+
 This library is a port of [express-jwt](https://github.com/auth0/express-jwt) with changes needed for it to work correctly with [Lux](https://github.com/postlight/lux). It is currently based on express-jwt 5.2.0.
 
 Below is the original readme from express-jwt.
