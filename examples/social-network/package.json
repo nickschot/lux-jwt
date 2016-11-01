@@ -13,8 +13,10 @@
     "babel-core": "6.14.0",
     "babel-preset-lux": "1.3.0",
     "bcryptjs": "2.3.0",
+    "jsonwebtoken": "^7.1.9",
     "knex": "0.12.6",
     "lux-framework": "1.0.2",
+    "lux-jwt": "0.0.1",
     "sqlite3": "3.1.4"
   },
   "devDependencies": {

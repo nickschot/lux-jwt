@@ -61,7 +61,19 @@ class User extends Model {
     if (user) {
       const isAuthenticated = await comparePassword(password, user.password);
 
-      return isAuthenticated && user;
+      if(isAuthenticated && user){
+        let data = {
+          user: user.id
+        };
+
+        const token = await getNewToken(data);
+
+        if(token){
+          return {
+            token: token
+          };
+        }
+      }
     }
   }
 }

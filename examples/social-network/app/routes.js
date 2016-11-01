@@ -1,4 +1,6 @@
 export default function routes() {
+  this.get('token');
+
   this.resource('actions', {
     only: ['show', 'index']
   });
