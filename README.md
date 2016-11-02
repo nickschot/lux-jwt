@@ -6,7 +6,7 @@ This library is a port of [express-jwt](https://github.com/auth0/express-jwt) wi
 
 Below is the original readme from express-jwt.
 
-[![Build](https://travis-ci.org/auth0/express-jwt.png)](http://travis-ci.org/auth0/express-jwt)
+
 
 Middleware that validates JsonWebTokens and sets `req.user`.
 
