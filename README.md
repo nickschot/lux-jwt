@@ -8,26 +8,26 @@ Below is the original readme from express-jwt.
 
 
 
-Middleware that validates JsonWebTokens and sets `req.user`.
+Middleware that validates JsonWebTokens and sets `request.user`.
 
-This module lets you authenticate HTTP requests using JWT tokens in your Node.js
-applications.  JWTs are typically used to protect API endpoints, and are
+This module lets you authenticate HTTP requests using JWT tokens in your Lux
+applications. JWTs are typically used to protect API endpoints, and are
 often issued using OpenID Connect.
 
 ## Install
 
-    $ npm install express-jwt
+    $ npm i --save lux-jwt
 
 ## Usage
 
 The JWT authentication middleware authenticates callers using a JWT.
-If the token is valid, `req.user` will be set with the JSON object decoded
+If the token is valid, `request.user` will be set with the JSON object decoded
 to be used by later middleware for authorization and access control.
 
 For example,
 
 ```javascript
-var jwt = require('express-jwt');
+import jwt from 'lux-jwt';
 
 app.get('/protected',
   jwt({secret: 'shhhhhhared-secret'}),

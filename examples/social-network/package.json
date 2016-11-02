@@ -17,6 +17,7 @@
     "knex": "0.12.6",
     "lux-framework": "1.0.2",
     "lux-jwt": "0.0.1",
+    "lux-unless": "0.1.0",
     "sqlite3": "3.1.4"
   },
   "devDependencies": {
