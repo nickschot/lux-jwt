@@ -1,8 +1,7 @@
-var jwt = require('jsonwebtoken');
-var assert = require('assert');
-
-var expressjwt = require('../lib');
-var UnauthorizedError = require('../lib/errors/UnauthorizedError');
+import jwt from 'jsonwebtoken';
+import assert from 'assert';
+import expressjwt from '../dist';
+import UnauthorizedError from '../dist/errors/UnauthorizedError';
 
 describe('string tokens', function () {
   var req = {};

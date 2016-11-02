@@ -14,37 +14,38 @@
     "oauth",
     "lux"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/nickschot/lux-jwt.git"
-  },
+  "repository": "github:nickschot/lux-jwt",
   "bugs": {
     "url": "http://github.com/nickschot/lux-jwt/issues"
   },
-  "author": {
-    "name": "Nick Schot"
+  "author": "Nick Schot",
+  "license": "MIT",
+  "main": "dist/lux-jwt.js",
+  "scripts": {
+    "build": "babel lib -d dist --source-maps",
+    "test": "npm run build && mocha --compilers js:babel-core/register -R spec",
+    "prepublish": "npm run build"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/MIT"
-    }
-  ],
-  "main": "./lib",
+  "engines": {
+    "node": ">= 6.0"
+  },
   "dependencies": {
     "async": "^1.5.0",
-    "lux-unless": "^0.0.1",
     "jsonwebtoken": "~7.1.9",
     "lodash.set": "^4.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-plugin-transform-async-to-generator": "^6.16.0",
+    "babel-plugin-transform-class-properties": "^6.18.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.18.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
+    "babel-plugin-transform-es2015-parameters": "^6.18.0",
+    "babel-plugin-transform-es2015-spread": "^6.8.0",
+    "babel-plugin-transform-exponentiation-operator": "^6.8.0",
+    "babel-plugin-transform-flow-strip-types": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "conventional-changelog": "~1.1.0",
-    "mocha": "1.x.x"
-  },
-  "engines": {
-    "node": ">= 0.4.0"
-  },
-  "scripts": {
-    "test": "node_modules/.bin/mocha --reporter spec"
+    "mocha": "^3.1.2"
   }
 }

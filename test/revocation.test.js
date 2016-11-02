@@ -1,13 +1,12 @@
-var jwt = require('jsonwebtoken');
-var assert = require('assert');
-
-var expressjwt = require('../lib');
-var UnauthorizedError = require('../lib/errors/UnauthorizedError');
+import jwt from 'jsonwebtoken';
+import assert from 'assert';
+import expressjwt from '../dist';
+import UnauthorizedError from '../dist/errors/UnauthorizedError';
 
 describe('revoked jwts', function(){
   var secret = 'shhhhhh';
 
-  var revoked_id = '1234'
+  var revoked_id = '1234';
 
   var middleware = expressjwt({
     secret: secret,

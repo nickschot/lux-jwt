@@ -1,8 +1,7 @@
-var jwt = require('jsonwebtoken');
-var assert = require('assert');
-
-var expressjwt = require('../lib');
-var UnauthorizedError = require('../lib/errors/UnauthorizedError');
+import jwt from 'jsonwebtoken';
+import assert from 'assert';
+import expressjwt from '../dist';
+import UnauthorizedError from '../dist/errors/UnauthorizedError';
 
 describe('failure tests', function () {
   var req = {};
@@ -21,13 +20,6 @@ describe('failure tests', function () {
     expressjwt({secret: 'shhhh', credentialsRequired: true})(req, res, function(err) {
       assert.ok(err);
       assert.equal(err.code, 'credentials_required');
-    });
-  });
-
-  it('support unless skip', function() {
-    req.originalUrl = '/index.html';
-    expressjwt({secret: 'shhhh'}).unless({path: '/index.html'})(req, res, function(err) {
-      assert.ok(!err);
     });
   });
 
