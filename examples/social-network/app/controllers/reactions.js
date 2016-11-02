@@ -1,4 +1,4 @@
-import { Controller } from 'lux-framework';
+import {Controller} from 'lux-framework';
 
 class ReactionsController extends Controller {
   params = [

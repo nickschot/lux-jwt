@@ -1,4 +1,4 @@
-import { Serializer } from 'lux-framework';
+import {Serializer} from 'lux-framework';
 
 class ReactionsSerializer extends Serializer {
   attributes = [

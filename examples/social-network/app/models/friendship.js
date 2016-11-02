@@ -1,4 +1,4 @@
-import { Model } from 'lux-framework';
+import {Model} from 'lux-framework';
 
 class Friendship extends Model {
   static belongsTo = {

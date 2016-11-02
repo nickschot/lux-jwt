@@ -4,14 +4,14 @@ import jwt from 'jsonwebtoken';
 export const secret = 'shhhhhhared-secret';
 const expiresIn = 60 * 60;
 
-export function getNewToken(data){
-    return new Promise((resolve, reject) => {
-        jwt.sign(data, secret, { expiresIn: expiresIn }, (err, token) => {
-            if(err) {
-                return reject(err);
-            }
+export function getNewToken(data) {
+  return new Promise((resolve, reject) => {
+    jwt.sign(data, secret, {expiresIn: expiresIn}, (err, token) => {
+      if (err) {
+        return reject(err);
+      }
 
-            resolve(token);
-        });
+      resolve(token);
     });
+  });
 }

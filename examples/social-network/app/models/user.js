@@ -1,6 +1,6 @@
-import { Model } from 'lux-framework';
+import {Model} from 'lux-framework';
 
-import { hashPassword, comparePassword } from 'app/utils/password';
+import {hashPassword, comparePassword} from 'app/utils/password';
 
 class User extends Model {
   static hasMany = {
@@ -61,14 +61,14 @@ class User extends Model {
     if (user) {
       const isAuthenticated = await comparePassword(password, user.password);
 
-      if(isAuthenticated && user){
+      if (isAuthenticated && user) {
         let data = {
           user: user.id
         };
 
         const token = await getNewToken(data);
 
-        if(token){
+        if (token) {
           return {
             token: token
           };

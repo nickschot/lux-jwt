@@ -1,4 +1,4 @@
-import { Controller } from 'lux-framework';
+import {Controller} from 'lux-framework';
 
 import User from 'app/models/user';
 

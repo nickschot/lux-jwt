@@ -1,4 +1,4 @@
-import { Serializer } from 'lux-framework';
+import {Serializer} from 'lux-framework';
 
 class CategorizationsSerializer extends Serializer {
   hasOne = [

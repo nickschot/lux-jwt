@@ -1,4 +1,4 @@
-import { Model } from 'lux-framework';
+import {Model} from 'lux-framework';
 
 class Categorization extends Model {
   static belongsTo = {

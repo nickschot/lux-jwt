@@ -1,4 +1,4 @@
-import { Model } from 'lux-framework';
+import {Model} from 'lux-framework';
 
 import Comment from 'app/models/comment';
 import Notification from 'app/models/notification';
@@ -21,24 +21,24 @@ class Action extends Model {
   };
 
   async notifyOwner() {
-    const { trackableId, trackableType } = this;
+    const {trackableId, trackableType} = this;
 
     if (trackableType === 'Comment') {
       const trackable = await Comment
         .first()
         .select('postId', 'userId')
-        .where({ id: trackableId });
+        .where({id: trackableId});
 
       if (trackable) {
         const [user, post] = await Promise.all([
           User
             .first()
             .select('name')
-            .where({ id: trackable.userId }),
+            .where({id: trackable.userId}),
           Post
             .first()
             .select('userId')
-            .where({ id: trackable.postId })
+            .where({id: trackable.postId})
         ]);
 
         if (user && post) {
@@ -55,7 +55,7 @@ class Action extends Model {
 
       const reaction = await Reaction
         .first()
-        .where({ id: trackableId });
+        .where({id: trackableId});
 
       if (reaction) {
         if (!reaction.postId) {
@@ -72,11 +72,11 @@ class Action extends Model {
           User
             .first()
             .select('name')
-            .where({ id: reaction.userId }),
+            .where({id: reaction.userId}),
           ReactableModel
             .first()
             .select('userId')
-            .where({ id: reactableId })
+            .where({id: reactableId})
         ]);
 
         if (user && reactable) {
