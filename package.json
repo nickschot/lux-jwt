@@ -20,7 +20,7 @@
   },
   "author": "Nick Schot",
   "license": "MIT",
-  "main": "dist/lux-jwt.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist --source-maps",
     "test": "npm run build && mocha --compilers js:babel-core/register -R spec",
