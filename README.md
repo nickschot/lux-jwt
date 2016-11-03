@@ -1,7 +1,7 @@
 # lux-jwt
 Middleware implementation of JWT for [Lux](https://github.com/postlight/lux).
 
-[![Build Status](https://travis-ci.org/nickschot/lux-jwt.svg?branch=master)](https://travis-ci.org/nickschot/lux-jwt) [![Coverage Status](https://coveralls.io/repos/github/nickschot/lux-jwt/badge.svg?branch=master)](https://coveralls.io/github/nickschot/lux-jwt?branch=master) [![Dependency Status](https://david-dm.org/nickschot/lux-jwt.svg)](https://david-dm.org/nickschot/lux-jwt)
+[![Build Status](https://travis-ci.org/nickschot/lux-jwt.svg?branch=master)](https://travis-ci.org/nickschot/lux-jwt) [![Coverage Status](https://coveralls.io/repos/github/nickschot/lux-jwt/badge.svg?branch=master)](https://coveralls.io/github/nickschot/lux-jwt?branch=master) [![Dependency Status](https://david-dm.org/nickschot/lux-jwt.svg)](https://david-dm.org/nickschot/lux-jwt) [![npm version](https://badge.fury.io/js/lux-jwt.svg)](https://badge.fury.io/js/lux-jwt)
 
 This module lets you authenticate HTTP requests using JWT tokens in your Lux
 applications. JWTs are typically used to protect (stateless) API endpoints.
