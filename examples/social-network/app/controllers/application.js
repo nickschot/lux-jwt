@@ -1,13 +1,13 @@
 import {Controller, luxify} from 'lux-framework';
 
-import luxjwt from 'lux-jwt';
+import jwt from 'lux-jwt';
 import unless from 'lux-unless';
 import {getNewToken, secret} from 'app/utils/token';
 
 class ApplicationController extends Controller {
   beforeAction = [
     //Run the JWT middleware except on the /users/login route
-    unless({path: ['/users/login']}, luxjwt({secret: secret}))
+    unless({path: ['/users/login']}, jwt({secret: secret}))
   ];
 
   token = async(request) => {
