@@ -2,7 +2,7 @@ import {Controller, luxify} from 'lux-framework';
 
 import luxjwt from 'lux-jwt';
 import unless from 'lux-unless';
-import {getNewToken, secret} from 'app/utils/token';
+import {getNewToken} from 'app/utils/token';
 
 class ApplicationController extends Controller {
   beforeAction = [
