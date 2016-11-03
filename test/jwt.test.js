@@ -1,103 +1,134 @@
 import jwt from 'jsonwebtoken';
 import assert from 'assert';
 import expressjwt from '../dist';
-import UnauthorizedError from '../dist/errors/UnauthorizedError';
+import UnauthorizedError from '../dist/errors/unauthorized-error';
 
 describe('failure tests', function () {
   var req = {};
   var res = {};
 
-  it('should throw if options not sent', function () {
+  it('should throw if options not sent', async function () {
+    let e;
+
     try {
-      expressjwt();
-    } catch (e) {
-      assert.ok(e);
-      assert.equal(e.message, 'secret should be set');
+      await expressjwt();
+    } catch (err) {
+      e = err;
     }
+
+    assert.ok(e);
+    assert.equal(e.message, 'Secret must be passed!');
   });
 
-  it('should throw if no authorization header and credentials are required', function () {
-    expressjwt({secret: 'shhhh', credentialsRequired: true})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'credentials_required');
-    });
+  it('should skip on CORS preflight', async function () {
+    let corsReq = {
+      method: 'OPTIONS',
+      headers: new Map([
+        ['access-control-request-headers', 'sasa, sras,  authorization']
+      ])
+    };
+
+    let e;
+
+    try {
+      await expressjwt({secret: 'shhhh'})(corsReq, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
   });
 
-  it('should skip on CORS preflight', function () {
-    var corsReq = {};
-    corsReq.method = 'OPTIONS';
-    corsReq.headers = new Map([
-      ['access-control-request-headers', 'sasa, sras,  authorization']
-    ]);
-    expressjwt({secret: 'shhhh'})(corsReq, res, function (err) {
-      assert.ok(!err);
-    });
-  });
-
-  it('should throw if authorization header is malformed', function () {
+  it('should throw if authorization header is malformed', async function () {
     req.headers = new Map([
       ['authorization', 'wrong']
     ]);
-    expressjwt({secret: 'shhhh'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'credentials_bad_format');
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: 'shhhh'})(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'Bad Authorization header format. Format is "Authorization: Bearer token"');
   });
 
-  it('should throw if authorization header is not Bearer', function () {
+  it('should throw if authorization header is not Bearer', async function () {
     req.headers = new Map([
       ['authorization', 'Basic foobar']
     ]);
-    expressjwt({secret: 'shhhh'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'credentials_bad_scheme');
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: 'shhhh'})(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'Bad Authorization header format. Format is "Authorization: Bearer token"');
   });
 
-  it('should next if authorization header is not Bearer and credentialsRequired is false', function () {
-    req.headers = new Map([
-      ['authorization', 'Basic foobar']
-    ]);
-    expressjwt({secret: 'shhhh', credentialsRequired: false})(req, res, function (err) {
-      assert.ok(typeof err === 'undefined');
-    });
-  });
-
-  it('should throw if authorization header is not well-formatted jwt', function () {
+  it('should throw if authorization header is not well-formatted jwt', async function () {
     req.headers = new Map([
       ['authorization', 'Bearer wrongjwt']
     ]);
-    expressjwt({secret: 'shhhh'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-    });
+
+    let e = null;
+
+    try {
+      await expressjwt({secret: 'shhhh'})(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'jwt malformed');
   });
 
-  it('should throw if jwt is an invalid json', function () {
+  it('should throw if jwt is an invalid json', async function () {
     req.headers = new Map([
       ['authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.yJ1c2VybmFtZSI6InNhZ3VpYXIiLCJpYXQiOjE0NzEwMTg2MzUsImV4cCI6MTQ3MzYxMDYzNX0.foo']
     ]);
-    expressjwt({secret: 'shhhh'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: 'shhhh'})(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'invalid token');
   });
 
-  it('should throw if authorization header is not valid jwt', function () {
+  it('should throw if authorization header is not valid jwt', async function () {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
-    expressjwt({secret: 'different-shhhh'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'invalid signature');
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: 'different-shhhh'})(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'invalid signature');
   });
 
-  it('should throw if audience is not expected', function () {
+  //TODO: implement aud support
+/*  it('should throw if audience is not expected', function () {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
 
@@ -109,24 +140,30 @@ describe('failure tests', function () {
       assert.equal(err.code, 'invalid_token');
       assert.equal(err.message, 'jwt audience invalid. expected: not-expected-audience');
     });
-  });
+  });*/
 
-  it('should throw if token is expired', function () {
+  it('should throw if token is expired', async function () {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar', exp: 1382412921}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
-    expressjwt({secret: 'shhhhhh'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.inner.name, 'TokenExpiredError');
-      assert.equal(err.message, 'jwt expired');
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: 'shhhhhh'})(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'jwt expired');
   });
 
-  it('should throw if token issuer is wrong', function () {
+  //TODO: add iss support
+  /*it('should throw if token issuer is wrong', function () {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
 
@@ -138,28 +175,10 @@ describe('failure tests', function () {
       assert.equal(err.code, 'invalid_token');
       assert.equal(err.message, 'jwt issuer invalid. expected: http://wrong');
     });
-  });
-
-  it('should use errors thrown from custom getToken function', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
-
-    function getTokenThatThrowsError() {
-      throw new UnauthorizedError('invalid_token', {message: 'Invalid token!'});
-    }
-
-    expressjwt({
-      secret: 'shhhhhh',
-      getToken: getTokenThatThrowsError
-    })(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'Invalid token!');
-    });
-  });
+  });*/
 
 
-  it('should throw error when signature is wrong', function () {
+  it('should throw error when signature is wrong', async function () {
     var secret = "shhh";
     var token = jwt.sign({foo: 'bar', iss: 'http://www'}, secret);
     // manipulate the token
@@ -172,39 +191,17 @@ describe('failure tests', function () {
     req.headers = new Map([
       ['authorization', 'Bearer ' + newToken]
     ]);
-    expressjwt({secret: secret})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'invalid token');
-    });
-  });
 
-  it('should throw error if token is expired even with when credentials are not required', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', exp: 1382412921}, secret);
+    let e;
 
-    req.headers = new Map([
-      ['authorization', 'Bearer ' + token]
-    ]);
-    expressjwt({secret: secret, credentialsRequired: false})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'jwt expired');
-    });
-  });
+    try {
+      await expressjwt({secret: secret})(req, res);
+    } catch (err){
+      e = err;
+    }
 
-  it('should throw error if token is invalid even with when credentials are not required', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', exp: 1382412921}, secret);
-
-    req.headers = new Map([
-      ['authorization', 'Bearer ' + token]
-    ]);
-    expressjwt({secret: "not the secret", credentialsRequired: false})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'invalid signature');
-    });
+      assert.ok(e);
+      assert.equal(e.message, 'invalid token');
   });
 
 });
@@ -213,104 +210,77 @@ describe('work tests', function () {
   var req = {};
   var res = {};
 
-  it('should work if authorization header is valid jwt', function () {
+  it('should work if authorization header is valid jwt', async function () {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
-    expressjwt({secret: secret})(req, res, function () {
-      assert.equal('bar', req.user.foo);
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: secret})(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert.ok(!e);
+    assert.equal('bar', req.user.foo);
   });
 
-  it('should work with nested properties', function () {
+  it('should work with nested properties', async function () {
     var secret = 'shhhhhh';
     var token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
-    expressjwt({secret: secret, requestProperty: 'auth.token'})(req, res, function () {
-      assert.equal('bar', req.auth.token.foo);
-    });
+
+    let e;
+
+    try {
+      await expressjwt({secret: secret, requestProperty: 'auth.token'})(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert.ok(!e);
+    assert.equal('bar', req.auth.token.foo);
   });
 
-  it('should work if authorization header is valid with a buffer secret', function () {
+  it('should work if authorization header is valid with a buffer secret', async function () {
     var secret = new Buffer('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'base64');
     var token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
-    expressjwt({secret: secret})(req, res, function () {
-      assert.equal('bar', req.user.foo);
-    });
-  });
 
-  it('should set userProperty if option provided', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    let e;
 
-    req.headers = new Map([
-      ['authorization', 'Bearer ' + token]
-    ]);
-    expressjwt({secret: secret, userProperty: 'auth'})(req, res, function () {
-      assert.equal('bar', req.auth.foo);
-    });
-  });
-
-  it('should work if no authorization header and credentials are not required', function () {
-    req = {};
-    expressjwt({secret: 'shhhh', credentialsRequired: false})(req, res, function (err) {
-      assert(typeof err === 'undefined');
-    });
-  });
-
-  it('should not work if no authorization header', function () {
-    req = {};
-    expressjwt({secret: 'shhhh'})(req, res, function (err) {
-      assert(typeof err !== 'undefined');
-    });
-  });
-
-  it('should work with a custom getToken function', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
-
-    req.headers = new Map();
-    req.query = {};
-    req.query.token = token;
-
-    function getTokenFromQuery(req) {
-      return req.query.token;
+    try {
+      await expressjwt({secret: secret})(req, res);
+    } catch (err){
+      e = err;
     }
 
-    expressjwt({
-      secret: secret,
-      getToken: getTokenFromQuery
-    })(req, res, function () {
-      assert.equal('bar', req.user.foo);
-    });
+    assert.ok(!e);
+    assert.equal('bar', req.user.foo);
   });
 
-  it('should work with a secretCallback function that accepts header argument', function () {
-    var secret = 'shhhhhh';
-    var secretCallback = function (req, headers, payload, cb) {
-      assert.equal(headers.alg, 'HS256');
-      assert.equal(payload.foo, 'bar');
-      process.nextTick(function () {
-        return cb(null, secret)
-      });
-    };
-    var token = jwt.sign({foo: 'bar'}, secret);
+  it('should not work if no authorization header', async function () {
+    req = {};
 
-    req.headers = new Map([
-      ['authorization', 'Bearer ' + token]
-    ]);
-    expressjwt({secret: secretCallback})(req, res, function () {
-      assert.equal('bar', req.user.foo);
-    });
+    let e;
+
+    try {
+      await expressjwt({secret: 'shhhh'})(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert(typeof e !== 'undefined');
   });
 });
