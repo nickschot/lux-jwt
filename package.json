@@ -30,7 +30,6 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "async": "^1.5.0",
     "jsonwebtoken": "~7.1.9",
     "lodash.set": "^4.3.2"
   },
