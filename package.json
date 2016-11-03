@@ -12,7 +12,8 @@
     "jwt",
     "token",
     "oauth",
-    "lux"
+    "lux",
+    "lux-middleware"
   ],
   "repository": "github:nickschot/lux-jwt",
   "bugs": {
