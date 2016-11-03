@@ -4,8 +4,8 @@ import expressjwt from '../dist';
 import UnauthorizedError from '../dist/errors/unauthorized-error';
 
 describe('failure tests', function () {
-  var req = {};
-  var res = {};
+  let req = {};
+  let res = {};
 
   it('should throw if options not sent', async function () {
     let e;
@@ -108,8 +108,8 @@ describe('failure tests', function () {
   });
 
   it('should throw if authorization header is not valid jwt', async function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -129,8 +129,8 @@ describe('failure tests', function () {
 
   //TODO: implement aud support
 /*  it('should throw if audience is not expected', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -143,8 +143,8 @@ describe('failure tests', function () {
   });*/
 
   it('should throw if token is expired', async function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', exp: 1382412921}, secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign({foo: 'bar', exp: 1382412921}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -164,8 +164,8 @@ describe('failure tests', function () {
 
   //TODO: add iss support
   /*it('should throw if token issuer is wrong', function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -179,13 +179,13 @@ describe('failure tests', function () {
 
 
   it('should throw error when signature is wrong', async function () {
-    var secret = "shhh";
-    var token = jwt.sign({foo: 'bar', iss: 'http://www'}, secret);
+    let secret = "shhh";
+    let token = jwt.sign({foo: 'bar', iss: 'http://www'}, secret);
     // manipulate the token
-    var newContent = new Buffer("{foo: 'bar', edg: 'ar'}").toString('base64');
-    var splitetToken = token.split(".");
+    let newContent = new Buffer("{foo: 'bar', edg: 'ar'}").toString('base64');
+    let splitetToken = token.split(".");
     splitetToken[1] = newContent;
-    var newToken = splitetToken.join(".");
+    let newToken = splitetToken.join(".");
 
     // build request
     req.headers = new Map([
@@ -207,12 +207,12 @@ describe('failure tests', function () {
 });
 
 describe('work tests', function () {
-  var req = {};
-  var res = {};
+  let req = {};
+  let res = {};
 
   it('should work if authorization header is valid jwt', async function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -231,8 +231,8 @@ describe('work tests', function () {
   });
 
   it('should work with nested properties', async function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign({foo: 'bar'}, secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -251,8 +251,8 @@ describe('work tests', function () {
   });
 
   it('should work if authorization header is valid with a buffer secret', async function () {
-    var secret = new Buffer('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'base64');
-    var token = jwt.sign({foo: 'bar'}, secret);
+    let secret = new Buffer('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'base64');
+    let token = jwt.sign({foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
