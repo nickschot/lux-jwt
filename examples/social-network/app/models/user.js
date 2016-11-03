@@ -1,6 +1,7 @@
 import {Model} from 'lux-framework';
 
 import {hashPassword, comparePassword} from 'app/utils/password';
+import {getNewToken} from 'app/utils/token';
 
 class User extends Model {
   static hasMany = {
