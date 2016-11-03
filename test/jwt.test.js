@@ -65,7 +65,7 @@ describe('failure tests', function () {
 
     try {
       await expressjwt({secret: 'shhhh'})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
@@ -119,7 +119,7 @@ describe('failure tests', function () {
 
     try {
       await expressjwt({secret: 'different-shhhh'})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
@@ -128,19 +128,19 @@ describe('failure tests', function () {
   });
 
   //TODO: implement aud support
-/*  it('should throw if audience is not expected', function () {
-    let secret = 'shhhhhh';
-    let token = jwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
+  /*  it('should throw if audience is not expected', function () {
+   let secret = 'shhhhhh';
+   let token = jwt.sign({foo: 'bar', aud: 'expected-audience'}, secret);
 
-    req.headers = new Map([
-      ['authorization', 'Bearer ' + token]
-    ]);
-    expressjwt({secret: 'shhhhhh', audience: 'not-expected-audience'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'jwt audience invalid. expected: not-expected-audience');
-    });
-  });*/
+   req.headers = new Map([
+   ['authorization', 'Bearer ' + token]
+   ]);
+   expressjwt({secret: 'shhhhhh', audience: 'not-expected-audience'})(req, res, function (err) {
+   assert.ok(err);
+   assert.equal(err.code, 'invalid_token');
+   assert.equal(err.message, 'jwt audience invalid. expected: not-expected-audience');
+   });
+   });*/
 
   it('should throw if token is expired', async function () {
     let secret = 'shhhhhh';
@@ -154,7 +154,7 @@ describe('failure tests', function () {
 
     try {
       await expressjwt({secret: 'shhhhhh'})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
@@ -164,18 +164,18 @@ describe('failure tests', function () {
 
   //TODO: add iss support
   /*it('should throw if token issuer is wrong', function () {
-    let secret = 'shhhhhh';
-    let token = jwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
+   let secret = 'shhhhhh';
+   let token = jwt.sign({foo: 'bar', iss: 'http://foo'}, secret);
 
-    req.headers = new Map([
-      ['authorization', 'Bearer ' + token]
-    ]);
-    expressjwt({secret: 'shhhhhh', issuer: 'http://wrong'})(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'invalid_token');
-      assert.equal(err.message, 'jwt issuer invalid. expected: http://wrong');
-    });
-  });*/
+   req.headers = new Map([
+   ['authorization', 'Bearer ' + token]
+   ]);
+   expressjwt({secret: 'shhhhhh', issuer: 'http://wrong'})(req, res, function (err) {
+   assert.ok(err);
+   assert.equal(err.code, 'invalid_token');
+   assert.equal(err.message, 'jwt issuer invalid. expected: http://wrong');
+   });
+   });*/
 
 
   it('should throw error when signature is wrong', async function () {
@@ -196,12 +196,12 @@ describe('failure tests', function () {
 
     try {
       await expressjwt({secret: secret})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
-      assert.ok(e);
-      assert.equal(e.message, 'invalid token');
+    assert.ok(e);
+    assert.equal(e.message, 'invalid token');
   });
 
 });
@@ -222,7 +222,7 @@ describe('work tests', function () {
 
     try {
       await expressjwt({secret: secret})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
@@ -242,7 +242,7 @@ describe('work tests', function () {
 
     try {
       await expressjwt({secret: secret, requestProperty: 'auth.token'})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
@@ -262,7 +262,7 @@ describe('work tests', function () {
 
     try {
       await expressjwt({secret: secret})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
@@ -277,7 +277,7 @@ describe('work tests', function () {
 
     try {
       await expressjwt({secret: 'shhhh'})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 

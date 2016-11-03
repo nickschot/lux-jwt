@@ -1,4 +1,4 @@
-import { sign } from 'lux-jwt';
+import {sign} from 'lux-jwt';
 
 //NOTE: you should put this in an environment variable instead of the codebase
 export const secret = 'shhhhhhared-secret';

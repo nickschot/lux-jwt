@@ -75,7 +75,7 @@ describe('revoked JWTs', function () {
           throw new Error('An error ocurred');
         }
       })(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 

@@ -4,12 +4,12 @@ import expressjwt from '../dist';
 import UnauthorizedError from '../dist/errors/unauthorized-error';
 
 describe('string tokens', function () {
-  var req = {};
-  var res = {};
+  let req = {};
+  let res = {};
 
   it('should work with a valid string token', async function () {
-    var secret = 'shhhhhh';
-    var token = jwt.sign('foo', secret);
+    let secret = 'shhhhhh';
+    let token = jwt.sign('foo', secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
@@ -19,7 +19,7 @@ describe('string tokens', function () {
 
     try {
       await expressjwt({secret: secret})(req, res);
-    } catch (err){
+    } catch (err) {
       e = err;
     }
 
