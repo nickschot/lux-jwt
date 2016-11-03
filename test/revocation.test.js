@@ -1,67 +1,85 @@
 import jwt from 'jsonwebtoken';
 import assert from 'assert';
 import expressjwt from '../dist';
-import UnauthorizedError from '../dist/errors/UnauthorizedError';
+import UnauthorizedError from '../dist/errors/unauthorized-error';
 
-describe('revoked jwts', function () {
-  var secret = 'shhhhhh';
+describe('revoked JWTs', function () {
+  let secret = 'shhhhhh';
 
-  var revoked_id = '1234';
+  let revoked_id = '1234';
 
-  var middleware = expressjwt({
+  let middleware = expressjwt({
     secret: secret,
-    isRevoked: function (req, payload, done) {
-      done(null, payload.jti && payload.jti === revoked_id);
+    isRevoked: function (req, payload) {
+      return payload.jti && payload.jti === revoked_id;
     }
   });
 
-  it('should throw if token is revoked', function () {
-    var req = {};
-    var res = {};
-    var token = jwt.sign({jti: revoked_id, foo: 'bar'}, secret);
+  it('should throw if token is revoked', async function () {
+    let req = {};
+    let res = {};
+    let token = jwt.sign({jti: revoked_id, foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
 
-    middleware(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.code, 'revoked_token');
-      assert.equal(err.message, 'The token has been revoked.');
-    });
+    let e;
+
+    try {
+      await middleware(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'Token has been revoked');
   });
 
-  it('should work if token is not revoked', function () {
-    var req = {};
-    var res = {};
-    var token = jwt.sign({jti: '1233', foo: 'bar'}, secret);
+  it('should work if token is not revoked', async function () {
+    let req = {};
+    let res = {};
+    let token = jwt.sign({jti: '1233', foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
 
-    middleware(req, res, function () {
-      assert.equal('bar', req.user.foo);
-    });
+    let e;
+
+    try {
+      await middleware(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
+    assert.equal('bar', req.user.foo);
   });
 
-  it('should throw if error occurs checking if token is revoked', function () {
-    var req = {};
-    var res = {};
-    var token = jwt.sign({jti: revoked_id, foo: 'bar'}, secret);
+  it('should throw if error occurs checking if token is revoked', async function () {
+    let req = {};
+    let res = {};
+    let token = jwt.sign({jti: revoked_id, foo: 'bar'}, secret);
 
     req.headers = new Map([
       ['authorization', 'Bearer ' + token]
     ]);
 
-    expressjwt({
-      secret: secret,
-      isRevoked: function (req, payload, done) {
-        done(new Error('An error ocurred'));
-      }
-    })(req, res, function (err) {
-      assert.ok(err);
-      assert.equal(err.message, 'An error ocurred');
-    });
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        isRevoked: function (req, payload) {
+          throw new Error('An error ocurred');
+        }
+      })(req, res);
+    } catch (err){
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'An error ocurred');
   });
 });
