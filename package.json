@@ -23,7 +23,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "babel lib -d dist --source-maps",
-    "test": "npm run build && mocha --compilers js:babel-core/register -R spec",
+    "test": "mocha --compilers js:babel-core/register -R spec",
+    "coverall": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
     "prepublish": "npm run build"
   },
   "engines": {
@@ -45,6 +46,8 @@
     "babel-plugin-transform-flow-strip-types": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "conventional-changelog": "~1.1.0",
-    "mocha": "^3.1.2"
+    "coveralls": "^2.11.14",
+    "mocha": "^3.1.2",
+    "nyc": "^8.4.0"
   }
 }
