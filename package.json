@@ -46,7 +46,6 @@
     "babel-plugin-transform-exponentiation-operator": "^6.8.0",
     "babel-plugin-transform-flow-strip-types": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
-    "conventional-changelog": "~1.1.0",
     "coveralls": "^2.11.14",
     "mocha": "^3.1.2",
     "nyc": "^8.4.0"
