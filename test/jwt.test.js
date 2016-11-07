@@ -204,6 +204,101 @@ describe('failure tests', function () {
     assert.equal(e.message, 'invalid token');
   });
 
+  it('should throw an error if audience is invalid', async function () {
+    let secret = 'shhhhhh';
+    let audience = 'test-audience';
+    let token = jwt.sign({foo: 'bar', aud: 'wrong-audience'}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        audience: audience
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('jwt audience invalid. expected: '+audience, e.message);
+  });
+
+  it('should throw an error if audience is not present in the (valid) token', async function () {
+    let secret = 'shhhhhh';
+    let audience = 'test-audience';
+    let token = jwt.sign({foo: 'bar'}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        audience: audience
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('jwt audience invalid. expected: '+audience, e.message);
+  });
+
+  it('should throw an error if issuer is invalid', async function () {
+    let secret = 'shhhhhh';
+    let issuer = 'test-issuer';
+    let token = jwt.sign({foo: 'bar', iss: 'wrong-issuer'}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        issuer: issuer
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('jwt issuer invalid. expected: '+issuer, e.message);
+  });
+
+  it('should throw an error if issuer is not present in the (valid) token', async function () {
+    let secret = 'shhhhhh';
+    let issuer = 'test-issuer';
+    let token = jwt.sign({foo: 'bar'}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        issuer: issuer
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('jwt issuer invalid. expected: '+issuer, e.message);
+  });
 });
 
 describe('work tests', function () {
@@ -282,5 +377,53 @@ describe('work tests', function () {
     }
 
     assert(typeof e !== 'undefined');
+  });
+
+  it('should work if audience is valid', async function () {
+    let secret = 'shhhhhh';
+    let audience = 'test-audience';
+    let token = jwt.sign({foo: 'bar', aud: audience}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        audience: audience
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
+    assert.equal('bar', req.user.foo);
+  });
+
+  it('should work if issuer is valid', async function () {
+    let secret = 'shhhhhh';
+    let issuer = 'test-issuer';
+    let token = jwt.sign({foo: 'bar', iss: issuer}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        issuer: issuer
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
+    assert.equal('bar', req.user.foo);
   });
 });
