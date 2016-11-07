@@ -15,6 +15,30 @@ describe('revoked JWTs', function () {
     }
   });
 
+  it('should throw if isRevoked is not a function', async function () {
+    let req = {};
+    let res = {};
+    let token = jwt.sign({jti: '1233', foo: 'bar'}, secret);
+
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await expressjwt({
+        secret: secret,
+        isRevoked: 'Not a function'
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal(e.message, 'Token revocation must be a function!');
+  });
+
   it('should throw if token is revoked', async function () {
     let req = {};
     let res = {};
