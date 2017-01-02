@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.2.1] 02-01-2017
+- Update dependencies (most notable jsonwebtoken 7.2.1)
+
 ## [0.2.0] 07-11-2016
 - Improve README
 - Add support for audience, issuer, clockTolerance and algorithms
