@@ -6,23 +6,9 @@ import {getNewToken, secret} from 'app/utils/token';
 
 class ApplicationController extends Controller {
   beforeAction = [
-    //Run the JWT middleware except on the /users/login route
-    unless({path: ['/users/login']}, jwt({secret: secret}))
+    //Run the JWT middleware except on the the auth routes and OPTIONS requests
+    unless({path: ['/auth/login', '/auth/token-refresh'], method: ['OPTIONS']}, jwt({secret: secret}))
   ];
-
-  token = async(request) => {
-    let data = {
-      user: request.user.user
-    };
-
-    const token = await getNewToken(data);
-
-    if (token) {
-      return {
-        token: token
-      };
-    }
-  }
 }
 
 export default ApplicationController;

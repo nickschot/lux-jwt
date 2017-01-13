@@ -8,19 +8,6 @@ class UsersController extends Controller {
     'email',
     'password'
   ];
-
-  login({
-    params: {
-      data: {
-        attributes: {
-          email,
-          password
-        }
-      }
-    }
-  }) {
-    return User.authenticate(email, password);
-  }
 }
 
 export default UsersController;

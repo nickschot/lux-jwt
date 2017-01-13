@@ -1,6 +1,4 @@
 export default function routes() {
-  this.get('token');
-
   this.resource('actions', {
     only: ['show', 'index']
   });
@@ -19,10 +17,13 @@ export default function routes() {
   this.resource('reactions');
   this.resource('tags');
 
-  this.resource('users', function () {
-    this.collection(function () {
-      this.post('login');
-    });
+  this.resource('users');
+
+  this.resource('auth', {
+    only: []
+  }, function () {
+    this.post('/login', 'login');
+    this.post('/token-refresh', 'tokenRefresh');
   });
 
   this.namespace('admin', function () {
