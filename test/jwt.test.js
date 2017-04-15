@@ -104,7 +104,7 @@ describe('failure tests', function () {
     }
 
     assert.ok(e);
-    assert.equal(e.message, 'invalid token');
+    assert.equal(e.message, 'Unexpected token ȝ in JSON at position 0');
   });
 
   it('should throw if authorization header is not valid jwt', async function () {
