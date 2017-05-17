@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.3.0] 17-05-2017
+- __feat:__ add support for multiple secrets
+
 ## [0.2.3] 17-05-2017
 - Update dependencies (most notable jsonwebtoken 7.4.1)
 
