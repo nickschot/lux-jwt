@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import assert from 'assert';
-import expressjwt from '../dist';
+import luxjwt from '../dist';
 import UnauthorizedError from '../dist/errors/unauthorized-error';
 
 describe('revoked JWTs', function () {
@@ -8,7 +8,7 @@ describe('revoked JWTs', function () {
 
   let revoked_id = '1234';
 
-  let middleware = expressjwt({
+  let middleware = luxjwt({
     secret: secret,
     isRevoked: function (req, payload) {
       return payload.jti && payload.jti === revoked_id;
@@ -27,7 +27,7 @@ describe('revoked JWTs', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         isRevoked: 'Not a function'
       })(req, res);
@@ -93,7 +93,7 @@ describe('revoked JWTs', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         isRevoked: function (req, payload) {
           throw new Error('An error ocurred');

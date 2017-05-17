@@ -17,6 +17,12 @@ to be used by later middleware for authorization and access control.
 
 An example usage of using lux-jwt is shown below.
 
+Secret can also be an Array of multiple valid secrets. A good use case for this 
+is when you use automatically refreshed secrets. This way the previous secret is 
+still valid so the token isn't immediately invalidated when the secret is 
+refreshed. See [Heroku Secure Key](https://securekey.heroku.com/) for more
+ information.
+
 ```javascript
 import {Controller} from 'lux-framework';
 import jwt from 'lux-jwt';
@@ -56,7 +62,7 @@ This module also exposes the [jsonwebtoken](https://github.com/auth0/node-jsonwe
 
 ## Options
 An object containing the following options must be passed:
-- `secret` - A string or buffer containing either the secret for HMAC algorithms, or the PEM encoded public key for RSA and ECDSA.
+- `secret` - A string or buffer containing either the secret for HMAC algorithms, or the PEM encoded public key for RSA and ECDSA. Can also be an array with multiple valid secrets.
 - `requestProperty` (optional) - The key on which the payload of the JWT will be made available.
 - `isRevoked(request, decodedAccessToken)` (optional) - A function returning whether or not the token was revoked.
 - `audience` (optional) - The expected audience (aud) to be present in the token.

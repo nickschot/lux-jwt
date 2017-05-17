@@ -1,7 +1,7 @@
 /*
  import jwt from 'jsonwebtoken';
  import assert from 'assert';
- import expressjwt from '../dist';
+ import luxjwt from '../dist';
  import UnauthorizedError from '../dist/errors/unauthorized-error';
 
  describe('multitenancy', function () {
@@ -24,7 +24,7 @@
  {message: 'Could not find secret for issuer.'}));
  };
 
- var middleware = expressjwt({
+ var middleware = luxjwt({
  secret: secretCallback
  });
 
@@ -62,7 +62,7 @@
  ['authorization', 'Bearer ' + token]
  ]);
 
- var middleware = expressjwt({
+ var middleware = luxjwt({
  secret: secretCallback,
  isRevoked: function (req, payload, done) {
  done(null, true);

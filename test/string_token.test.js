@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import assert from 'assert';
-import expressjwt from '../dist';
+import luxjwt from '../dist';
 import UnauthorizedError from '../dist/errors/unauthorized-error';
 
 describe('string tokens', function () {
@@ -18,7 +18,7 @@ describe('string tokens', function () {
     let e;
 
     try {
-      await expressjwt({secret: secret})(req, res);
+      await luxjwt({secret: secret})(req, res);
     } catch (err) {
       e = err;
     }

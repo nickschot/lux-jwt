@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import assert from 'assert';
-import expressjwt from '../dist';
+import luxjwt from '../dist';
 import UnauthorizedError from '../dist/errors/unauthorized-error';
 
 describe('failure tests', function () {
@@ -11,13 +11,64 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt();
+      await luxjwt();
     } catch (err) {
       e = err;
     }
 
     assert.ok(e);
     assert.equal(e.message, 'Secret must be passed!');
+  });
+
+  it('should not work if secret is missing', async function () {
+    let e;
+
+    try {
+      let token = jwt.sign({foo: 'bar'});
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('TypeError: secret must be a string or buffer', e);
+  });
+
+  it('should not work if secret is an empty array', async function () {
+    let secretArr = [];
+
+    let e;
+
+    try {
+      await luxjwt({secret: secretArr});
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('Error: Secret must be passed!', e);
+  });
+
+  it('should not work if secret is an array with an invalid secret', async function () {
+    let secret = 'shhhhhh';
+    let secretArr = ['InvalidSecret'];
+
+    let token = jwt.sign({foo: 'bar'}, secret);
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await luxjwt({
+        secret: secretArr
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(e);
+    assert.equal('JsonWebTokenError: invalid signature', e.message);
   });
 
   it('should skip on CORS preflight', async function () {
@@ -31,7 +82,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'shhhh'})(corsReq, res);
+      await luxjwt({secret: 'shhhh'})(corsReq, res);
     } catch (err) {
       e = err;
     }
@@ -47,7 +98,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'shhhh'})(req, res);
+      await luxjwt({secret: 'shhhh'})(req, res);
     } catch (err) {
       e = err;
     }
@@ -64,7 +115,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'shhhh'})(req, res);
+      await luxjwt({secret: 'shhhh'})(req, res);
     } catch (err) {
       e = err;
     }
@@ -81,13 +132,13 @@ describe('failure tests', function () {
     let e = null;
 
     try {
-      await expressjwt({secret: 'shhhh'})(req, res);
+      await luxjwt({secret: 'shhhh'})(req, res);
     } catch (err) {
       e = err;
     }
 
     assert.ok(e);
-    assert.equal(e.message, 'jwt malformed');
+    assert.equal(e.message, 'JsonWebTokenError: jwt malformed');
   });
 
   it('should throw if jwt is an invalid json', async function () {
@@ -98,13 +149,13 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'shhhh'})(req, res);
+      await luxjwt({secret: 'shhhh'})(req, res);
     } catch (err) {
       e = err;
     }
 
     assert.ok(e);
-    assert.equal(e.message, 'Unexpected token ȝ in JSON at position 0');
+    assert.equal(e.message, 'SyntaxError: Unexpected token ȝ in JSON at position 0');
   });
 
   it('should throw if authorization header is not valid jwt', async function () {
@@ -118,13 +169,13 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'different-shhhh'})(req, res);
+      await luxjwt({secret: 'different-shhhh'})(req, res);
     } catch (err) {
       e = err;
     }
 
     assert.ok(e);
-    assert.equal(e.message, 'invalid signature');
+    assert.equal(e.message, 'JsonWebTokenError: invalid signature');
   });
 
   //TODO: implement aud support
@@ -135,7 +186,7 @@ describe('failure tests', function () {
    req.headers = new Map([
    ['authorization', 'Bearer ' + token]
    ]);
-   expressjwt({secret: 'shhhhhh', audience: 'not-expected-audience'})(req, res, function (err) {
+   luxjwt({secret: 'shhhhhh', audience: 'not-expected-audience'})(req, res, function (err) {
    assert.ok(err);
    assert.equal(err.code, 'invalid_token');
    assert.equal(err.message, 'jwt audience invalid. expected: not-expected-audience');
@@ -153,13 +204,13 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'shhhhhh'})(req, res);
+      await luxjwt({secret: 'shhhhhh'})(req, res);
     } catch (err) {
       e = err;
     }
 
     assert.ok(e);
-    assert.equal(e.message, 'jwt expired');
+    assert.equal(e.message, 'TokenExpiredError: jwt expired');
   });
 
   //TODO: add iss support
@@ -170,7 +221,7 @@ describe('failure tests', function () {
    req.headers = new Map([
    ['authorization', 'Bearer ' + token]
    ]);
-   expressjwt({secret: 'shhhhhh', issuer: 'http://wrong'})(req, res, function (err) {
+   luxjwt({secret: 'shhhhhh', issuer: 'http://wrong'})(req, res, function (err) {
    assert.ok(err);
    assert.equal(err.code, 'invalid_token');
    assert.equal(err.message, 'jwt issuer invalid. expected: http://wrong');
@@ -195,13 +246,13 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: secret})(req, res);
+      await luxjwt({secret: secret})(req, res);
     } catch (err) {
       e = err;
     }
 
     assert.ok(e);
-    assert.equal(e.message, 'invalid token');
+    assert.equal(e.message, 'JsonWebTokenError: invalid token');
   });
 
   it('should throw an error if audience is invalid', async function () {
@@ -216,7 +267,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         audience: audience
       })(req, res);
@@ -225,7 +276,7 @@ describe('failure tests', function () {
     }
 
     assert.ok(e);
-    assert.equal('jwt audience invalid. expected: '+audience, e.message);
+    assert.equal('JsonWebTokenError: jwt audience invalid. expected: '+audience, e.message);
   });
 
   it('should throw an error if audience is not present in the (valid) token', async function () {
@@ -240,7 +291,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         audience: audience
       })(req, res);
@@ -249,7 +300,7 @@ describe('failure tests', function () {
     }
 
     assert.ok(e);
-    assert.equal('jwt audience invalid. expected: '+audience, e.message);
+    assert.equal('JsonWebTokenError: jwt audience invalid. expected: '+audience, e.message);
   });
 
   it('should throw an error if issuer is invalid', async function () {
@@ -264,7 +315,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         issuer: issuer
       })(req, res);
@@ -273,7 +324,7 @@ describe('failure tests', function () {
     }
 
     assert.ok(e);
-    assert.equal('jwt issuer invalid. expected: '+issuer, e.message);
+    assert.equal('JsonWebTokenError: jwt issuer invalid. expected: '+issuer, e.message);
   });
 
   it('should throw an error if issuer is not present in the (valid) token', async function () {
@@ -288,7 +339,7 @@ describe('failure tests', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         issuer: issuer
       })(req, res);
@@ -297,7 +348,7 @@ describe('failure tests', function () {
     }
 
     assert.ok(e);
-    assert.equal('jwt issuer invalid. expected: '+issuer, e.message);
+    assert.equal('JsonWebTokenError: jwt issuer invalid. expected: '+issuer, e.message);
   });
 });
 
@@ -316,7 +367,7 @@ describe('work tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: secret})(req, res);
+      await luxjwt({secret: secret})(req, res);
     } catch (err) {
       e = err;
     }
@@ -336,7 +387,7 @@ describe('work tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: secret, requestProperty: 'auth.token'})(req, res);
+      await luxjwt({secret: secret, requestProperty: 'auth.token'})(req, res);
     } catch (err) {
       e = err;
     }
@@ -356,7 +407,7 @@ describe('work tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: secret})(req, res);
+      await luxjwt({secret: secret})(req, res);
     } catch (err) {
       e = err;
     }
@@ -371,7 +422,7 @@ describe('work tests', function () {
     let e;
 
     try {
-      await expressjwt({secret: 'shhhh'})(req, res);
+      await luxjwt({secret: 'shhhh'})(req, res);
     } catch (err) {
       e = err;
     }
@@ -391,7 +442,7 @@ describe('work tests', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         audience: audience
       })(req, res);
@@ -415,7 +466,7 @@ describe('work tests', function () {
     let e;
 
     try {
-      await expressjwt({
+      await luxjwt({
         secret: secret,
         issuer: issuer
       })(req, res);
@@ -425,5 +476,84 @@ describe('work tests', function () {
 
     assert.ok(!e);
     assert.equal('bar', req.user.foo);
+  });
+
+  it('should work if secret is a string', async function () {
+    let secret = 'shhhhhh';
+    let e;
+
+    try {
+      let token = jwt.sign({foo: 'bar'}, secret);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
+  });
+
+  it('should work if secret is an array with a string', async function () {
+    let secret = 'shhhhhh';
+    let secretArr = [secret];
+
+    let token = jwt.sign({foo: 'bar'}, secret);
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await luxjwt({
+        secret: secretArr
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
+  });
+
+  it('should work if secret is an array with an invalid and a valid string', async function () {
+    let secret = 'shhhhhh';
+    let secretArr = ['InvalidSecret', secret];
+
+    let token = jwt.sign({foo: 'bar'}, secret);
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await luxjwt({
+        secret: secretArr
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
+  });
+
+  it('should work if secret is an array with a valid and an invalid string', async function () {
+    let secret = 'shhhhhh';
+    let secretArr = [secret, 'InvalidSecret'];
+
+    let token = jwt.sign({foo: 'bar'}, secret);
+    req.headers = new Map([
+      ['authorization', 'Bearer ' + token]
+    ]);
+
+    let e;
+
+    try {
+      await luxjwt({
+        secret: secretArr
+      })(req, res);
+    } catch (err) {
+      e = err;
+    }
+
+    assert.ok(!e);
   });
 });
