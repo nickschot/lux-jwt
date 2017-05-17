@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.2.3] 17-05-2017
+- Update dependencies (most notable jsonwebtoken 7.4.1)
+
 ## [0.2.2] 02-01-2017
 - Update dependencies (most notable jsonwebtoken 7.3.0)
 
