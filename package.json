@@ -32,7 +32,7 @@
     "node": ">= 6.0"
   },
   "dependencies": {
-    "jsonwebtoken": "~7.4.1",
+    "jsonwebtoken": "^8.0.0",
     "lodash.set": "^4.3.2"
   },
   "devDependencies": {
@@ -48,6 +48,6 @@
     "babel-plugin-transform-object-rest-spread": "^6.16.0",
     "coveralls": "^2.11.14",
     "mocha": "^3.1.2",
-    "nyc": "^10.1.2"
+    "nyc": "^11.2.1"
   }
 }

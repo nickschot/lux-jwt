@@ -30,7 +30,7 @@ describe('failure tests', function () {
     }
 
     assert.ok(e);
-    assert.equal('TypeError: secret must be a string or buffer', e);
+    assert.equal('Error: secretOrPrivateKey must have a value', e);
   });
 
   it('should not work if secret is an empty array', async function () {
