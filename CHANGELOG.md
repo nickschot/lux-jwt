@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.0] 06-09-2017
+- Update dependencies (most notable jsonwebtoken 8.0.0)
+- __important:__ jsonwebtoken had some breaking changes which is why this module had a major version bump too. For more information see the jsonwebtoken [migration notes](https://github.com/auth0/node-jsonwebtoken/wiki/Migration-Notes:-v7-to-v8)
+
 ## [0.3.0] 17-05-2017
 - __feat:__ add support for multiple secrets
 
